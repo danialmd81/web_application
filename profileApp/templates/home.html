@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../static/style.css">
+    <title>All Users</title>
+    <style>
+        table {
+            width: 90%;
+            border-collapse: collapse;
+            margin-left: 50px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid black;
+        }
+
+        th,
+        td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body bgcolor="#e6ffee">
+    <div class="one">
+        <div class="two">
+            <h1>Side Bar</h1>
+            <ul>
+                <li><a href="{{url_for('display')}}">Display</a></li>
+                <li class="active"><a href="{{url_for('home')}}">Home</a></li>
+                <li><a href="{{url_for('update')}}">Update</a></li>
+                <li><a href="{{url_for('delete_account')}}">Delete Account</a></li>
+                <li><a href="{{url_for('logout')}}">Log out</a></li>
+            </ul>
+        </div>
+        <div class="content" align="center">
+            <h2>All Users</h2>
+            <table>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Email</th>
+                    <th>Organisation</th>
+                    <th>Address</th>
+                    <th>City</th>
+                    <th>State</th>
+                    <th>Country</th>
+                    <th>Postal Code</th>
+                </tr>
+                {% for account in accounts %}
+                <tr>
+                    <td>{{ account.id }}</td>
+                    <td>{{ account.username }}</td>
+                    <td>{{ account.password }}</td>
+                    <td>{{ account.email }}</td>
+                    <td>{{ account.organisation }}</td>
+                    <td>{{ account.address }}</td>
+                    <td>{{ account.city }}</td>
+                    <td>{{ account.state }}</td>
+                    <td>{{ account.country }}</td>
+                    <td>{{ account.postalcode }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    </div>
+</body>
+
+
+</html>
