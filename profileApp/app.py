@@ -148,7 +148,7 @@ def home():
     return redirect(url_for('login'))
 
 
-@app.route("/delete_account", methods=["POST"])
+@app.route("/delete_account", methods=["GET", "POST"])
 def delete_account():
     if 'loggedin' in session:
         user_id = session['id']
@@ -161,8 +161,7 @@ def delete_account():
         session.pop('id', None)
         session.pop('username', None)
         return redirect(url_for('login'))
-    else:
-        return redirect(url_for('login'))
+    return redirect(url_for('login'))
 
 
 if __name__ == "__main__":
