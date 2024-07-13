@@ -13,7 +13,7 @@ app.secret_key = 'your secret key'
 
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'dani'
+app.config['MYSQL_PASSWORD'] = 'danial1381'
 app.config['MYSQL_DB'] = 'profileApp'
 
 
