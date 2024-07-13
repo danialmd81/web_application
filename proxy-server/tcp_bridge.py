@@ -1,6 +1,7 @@
 import select
 import socket
 import threading
+from scapy.all import sniff, IP, TCP, Raw
 
 
 def threaded(fn):
@@ -63,7 +64,8 @@ class TCPBridge(object):
                 (sock, addr) = self.server.accept()
                 if sock is None:
                     continue
-                client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                client_socket = socket.socket(
+                    socket.AF_INET, socket.SOCK_STREAM)
                 client_socket.connect((self.dst_host, self.dst_port))
                 self.tunnel(sock, client_socket)
             except KeyboardInterrupt:
@@ -74,6 +76,22 @@ class TCPBridge(object):
                 print("Exception:", exp)
 
 
+def packet_callback(packet):
+    if packet.haslayer(TCP) and packet.haslayer(Raw):
+        # Here you would analyze the packet, potentially modify it,
+        # and then need to forward it appropriately.
+        # This is a non-trivial task and requires a deep understanding
+        # of TCP/IP protocols and state management.
+        print(packet.summary())
+
+
+def start_sniffing():
+    sniff(filter="tcp port 80", prn=packet_callback, store=0)
+
+
 if __name__ == "__main__":
-    tcp_bridge = TCPBridge("0.0.0.0", 8082, "192.168.1.1", 80) #TODO:change destonation ip 
+    sniff_thread = threading.Thread(target=start_sniffing)
+    sniff_thread.start()
+    # TODO:change destonation ip
+    tcp_bridge = TCPBridge("0.0.0.0", 8082, "192.168.1.1", 80)
     tcp_bridge.run()
