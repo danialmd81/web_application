@@ -1,3 +1,2 @@
 .vscode/
-web-server/profileApp/__pycache__/*
-web-server/profileApp/__pycache__/app.cpython-312.pyc
+web-server/profileApp/__pycache__/

@@ -1,114 +1,117 @@
-/*Store this code in 'style.css' file inside the 'static' folder*/
-
-.logincontent {
-	margin: 0 auto;
-	height: 500px;
-	width: 400px;
-	background-color: #e6ffee;
-	border-radius: 10px;
+/* Base Styles */
+* {
+	box-sizing: border-box;
+	font-family: 'Josefin Sans', sans-serif;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	text-decoration: none;
 }
 
-.registercontent {
-	margin: 0 auto;
-	height: 720px;
-	width: 400px;
-	background-color: #e6ffee;
-	border-radius: 10px;
-}
-
-.logintop {
-	height: 60px;
-	width: 400px;
-	background-color: #009933;
-	color: #ffffff;
-}
-
-.registertop {
-	height: 60px;
-	width: 400px;
-	background-color: #009933;
-	color: #ffffff;
-}
-
+/* Common Elements */
+.btn,
 .textbox {
-	padding: 10px 40px;
-	background-color: #009933;
+	background: linear-gradient(45deg, #00ffff, #d4d700);
 	border-radius: 10px;
+	color: #FFFFFF;
+	font-style: oblique;
+	font-weight: bold;
+	padding: 10px 40px;
+	transition: transform 0.3s ease;
+}
+
+.btn:hover,
+.textbox:hover {
+	transform: scale(1.05);
 }
 
 ::placeholder {
 	color: #FFFFFF;
-	opacity: 1;
 	font-style: oblique;
 	font-weight: bold;
+	opacity: 1;
 }
 
-.btn {
-	padding: 10px 40px;
-	background-color: #009933;
-	color: #FFFFFF;
+/* Typography */
+.worddark,
+.wordlight {
 	font-style: oblique;
 	font-weight: bold;
-	border-radius: 10px;
 }
 
 .worddark {
-	color: #009933;
-	font-style: oblique;
-	font-weight: bold;
+	color: #00ffff;
 }
 
 .wordlight {
 	color: #FFFFFF;
-	font-style: oblique;
-	font-weight: bold;
 }
 
-* {
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-	list-style: none;
-	text-decoration: none;
-	font-family: 'Josefin Sans', sans-serif;
+/* Layout */
+.logincontent,
+.registercontent {
+	background-color: #f0f0f0;
+	/* Light gray background */
+	border-radius: 10px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	/* Subtle shadow for depth */
+	margin: 20px auto;
+	padding: 20px;
+	width: 90%;
+	max-width: 400px;
+	/* Responsive max width */
 }
 
+.registercontent {
+	height: 720px;
+}
+
+.logintop,
+.registertop {
+	background: linear-gradient(90deg, #007bff, #6610f2);
+	/* Blue to purple gradient */
+	color: #ffffff;
+	padding: 10px;
+	text-align: center;
+}
+
+/* Navigation Sidebar */
 .one {
 	display: flex;
 	position: relative;
 }
 
 .one .two {
-	width: 225px;
+	background: linear-gradient(180deg, #00ffff, #c2cc00);
 	height: 100%;
-	background: #009933;
 	padding: 30px 0px;
 	position: fixed;
+	width: 225px;
 }
 
-.one .two h1 {
-	color: #fff;
-	text-transform: uppercase;
-	text-align: center;
-	margin-bottom: 30px;
-	font-style: oblique;
-	font-weight: bold;
-}
-
+.one .two h1,
 .one .two h2 {
 	color: #fff;
 	text-align: center;
 }
 
-.one .two .active {
-	background: #0a8032;
+.one .two h1 {
+	font-style: oblique;
+	font-weight: bold;
+	margin-bottom: 30px;
+	text-transform: uppercase;
 }
 
 .one .two ul li {
-	text-align: center;
-	padding: 15px;
 	border-bottom: 0.1px solid white;
 	border-top: 0.1px solid white;
+	padding: 15px;
+	text-align: center;
+	transition: background-color 0.3s ease;
+}
+
+.one .two ul li:hover {
+	background-color: rgba(255, 255, 255, 0.2);
 }
 
 .one .two ul li a {
@@ -116,21 +119,22 @@
 	display: block;
 }
 
-.one .two ul li a .side {
-	width: 25px;
-	box-align: center;
+.one .two .active {
+	background: #d4d700;
+	animation: activeItem 2s infinite alternate;
 }
 
+/* Main Content */
 .one .content {
-	width: 100%;
 	margin-left: 200px;
+	width: 100%;
 }
 
 .one .content .topbar {
-	text-align: center;
-	padding: 20px;
-	background: #00b33c;
+	background: linear-gradient(90deg, #00ffff, #c2cc00);
 	color: white;
+	padding: 20px;
+	text-align: center;
 }
 
 .one .content .contentbar {
@@ -138,8 +142,105 @@
 }
 
 .one .content .contentbar h1 {
-	color: #11a844;
-	text-align: center;
+	color: #00ffff;
 	font-style: oblique;
 	font-weight: bold;
+	text-align: center;
+}
+
+/* Animations */
+@keyframes activeItem {
+	0% {
+		background-color: #00ffff;
+	}
+
+	100% {
+		background-color: #d4d700;
+	}
+}
+
+/* Define the fade-in animation */
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+
+	to {
+		opacity: 1;
+	}
+}
+
+/* Apply the animation to an element */
+.fade-in-element {
+	animation: fadeIn 2s ease-in-out forwards;
+}
+
+/* Improved base styles for the navbar */
+.navbar {
+	background: #333;
+	overflow: hidden;
+}
+
+.nav-links {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	justify-content: left;
+	/* Adjust as needed */
+}
+
+.nav-links li {
+	float: left;
+}
+
+.nav-links a {
+	display: block;
+	color: white;
+	text-align: center;
+	padding: 14px 16px;
+	text-decoration: none;
+}
+
+/* Dropdown Content (Hidden by default) */
+.dropdown-content {
+	display: none;
+	position: absolute;
+	background-color: #f9f9f9;
+	min-width: 160px;
+	box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+	z-index: 1;
+}
+
+.dropdown-content a {
+	color: black;
+	padding: 12px 16px;
+	text-decoration: none;
+	display: block;
+	text-align: left;
+}
+
+.dropdown-content a:hover {
+	background-color: #f1f1f1;
+}
+
+.dropdown:hover .dropdown-content {
+	display: block;
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+	.nav-links {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.nav-links li {
+		text-align: center;
+	}
+
+	.dropdown-content {
+		text-align: center;
+		/* Ensure dropdown content text aligns well on mobile */
+	}
 }
