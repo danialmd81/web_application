@@ -50,16 +50,14 @@ class TCPBridge(object):
         try:
             while not self.stop:
                 sock.getpeername() and sock2.getpeername()
-                r = select.select([sock, sock2], 1000)
+                r, w, x = select.select([sock, sock2], [], [], 1000)
                 if sock in r:
                     data = sock.recv(chunk_size)
                     if len(data) == 0:
                         break
                     host = self.parse_http_request(data)
-                    print(sock.getpeername(), host)
                     if host == specific_host:
                         sock2.sendall(data)
-                        print("Sent to", sock2.getpeername())
 
                 if sock2 in r:
                     data = sock2.recv(chunk_size)
