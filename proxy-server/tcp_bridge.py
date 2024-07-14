@@ -29,34 +29,54 @@ class TCPBridge(object):
         self.server.bind((self.host, self.port))
         self.stop = False
 
+    def parse_http_request(self, data):
+        try:
+            headers = data.decode("utf-8").split("\r\n")
+            for header in headers:
+                if header.startswith("Host:"):
+                    return header.split(": ")[1]
+        except UnicodeDecodeError:
+            # Data is not text; likely binary data, so we ignore it
+            pass
+        return None
+
     @threaded
-    def tunnel(self, sock: socket.socket, sock2: socket.socket, chunk_size=1024):
+    def tunnel(
+        self,
+        sock: socket.socket,
+        sock2: socket.socket,
+        chunk_size=1024,
+        specific_host="192.168.44.130",
+    ):
         try:
             while not self.stop:
-                # this line is for raising exception when connection is broken
                 sock.getpeername() and sock2.getpeername()
                 r, w, x = select.select([sock, sock2], [], [], 1000)
                 if sock in r:
                     data = sock.recv(chunk_size)
                     if len(data) == 0:
                         break
-                    sock2.sendall(data)
+                    host = self.parse_http_request(data)
+                    if host == specific_host:
+                        sock2.sendall(data)
 
                 if sock2 in r:
                     data = sock2.recv(chunk_size)
                     if len(data) == 0:
                         break
+                    # Assuming you only want to filter requests, not responses
                     sock.sendall(data)
         except:
             pass
-        try:
-            sock2.close()
-        except:
-            pass
-        try:
-            sock.close()
-        except:
-            pass
+        finally:
+            try:
+                sock2.close()
+            except:
+                pass
+            try:
+                sock.close()
+            except:
+                pass
 
     def run(self) -> None:
 
