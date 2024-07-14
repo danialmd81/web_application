@@ -36,7 +36,6 @@ class TCPBridge(object):
                 if header.startswith("Host:"):
                     return header.split(": ")[1]
         except UnicodeDecodeError:
-            # Data is not text; likely binary data, so we ignore it
             pass
         return None
 
@@ -98,27 +97,6 @@ class TCPBridge(object):
                 print("Exception:", exp)
 
 
-def http_packet_callback(packet):
-    if packet.haslayer(HTTPRequest):
-        http_layer = packet.getlayer(HTTPRequest)
-        print(f"HTTP Method: {http_layer.Method.decode('utf-8')}")
-        print(f"HTTP Host: {http_layer.Host.decode('utf-8')}")
-        if packet.haslayer(TCP):
-            tcp_layer = packet.getlayer(TCP)
-            ip_layer = packet.getlayer(IP)
-            print(
-                f"Source IP: {ip_layer.src}:{tcp_layer.sport} --> Destination IP: {ip_layer.dst}:{tcp_layer.dport}"
-            )
-
-
 if __name__ == "__main__":
-    # Create a new thread for running the sniffing function
-    sniff_thread = threading.Thread(
-        target=sniff,
-        kwargs={"filter": "tcp port 80", "prn": http_packet_callback, "store": False},
-    )
-
-    # Start the thread
-    sniff_thread.start()
     tcp_bridge = TCPBridge("0.0.0.0", 8080, "192.168.44.130", 80)
     tcp_bridge.run()
