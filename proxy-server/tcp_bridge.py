@@ -57,6 +57,7 @@ class TCPBridge(object):
                         break
                     host = self.parse_http_request(data)
                     if host == specific_host:
+                        print(sock.getpeername(), ":", sock2.getpeername(), ":", host)
                         sock2.sendall(data)
 
                 if sock2 in r:
