@@ -59,6 +59,7 @@ class TCPBridge(object):
             pass
 
     def run(self) -> None:
+
         self.server.listen()
 
         while not self.stop:
@@ -89,14 +90,22 @@ def packet_handler(packet):
 def http_packet_callback(packet):
     if packet.haslayer(HTTPRequest):
         http_layer = packet.getlayer(HTTPRequest)
-        print(f"HTTP Method: {http_layer.Method.decode("utf-8")}")
+        print(f"HTTP Method: {http_layer.Method.decode('utf-8')}")
         print(f"HTTP Host: {http_layer.Host.decode('utf-8')}")
         print(f"HTTP Path: {http_layer.Path.decode('utf-8')}")
-        print(f"HTTP User-Agent: {http_layer.fields['User-Agent'].decode('utf-8')}")
+        print(f"HTTP User-Agent: {http_layer.User_Agent.decode('utf-8')}")
+        print(f"HTTP Accept: {http_layer.Accept.decode('utf-8')}")
 
 
 if __name__ == "__main__":
+    # sniff(filter="tcp", prn=packet_handler)
+    # Create a new thread for running the sniffing function
+    sniff_thread = threading.Thread(
+        target=sniff,
+        kwargs={"filter": "tcp port 80", "prn": http_packet_callback, "store": False},
+    )
+
+    # Start the thread
+    sniff_thread.start()
     tcp_bridge = TCPBridge("0.0.0.0", 8080, "192.168.44.130", 80)
-    sniff(filter="tcp", prn=tcp_bridge.packet_handler)
-    sniff(filter="tcp port 80",prn=http_packet_callback,store=False)
     tcp_bridge.run()
