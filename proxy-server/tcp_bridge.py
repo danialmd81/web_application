@@ -83,9 +83,6 @@ def http_packet_callback(packet):
         http_layer = packet.getlayer(HTTPRequest)
         print(f"HTTP Method: {http_layer.Method.decode('utf-8')}")
         print(f"HTTP Host: {http_layer.Host.decode('utf-8')}")
-        print(f"HTTP Path: {http_layer.Path.decode('utf-8')}")
-        print(f"HTTP User-Agent: {http_layer.User_Agent.decode('utf-8')}")
-        print(f"HTTP Accept: {http_layer.Accept.decode('utf-8')}")
         if packet.haslayer(TCP):
             tcp_layer = packet.getlayer(TCP)
             ip_layer = packet.getlayer(IP)
