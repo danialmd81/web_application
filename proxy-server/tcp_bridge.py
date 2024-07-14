@@ -92,17 +92,11 @@ def http_packet_callback(packet):
             print(
                 f"Source IP: {ip_layer.src}:{tcp_layer.sport} --> Destination IP: {ip_layer.dst}:{tcp_layer.dport}"
             )
+            tcp_bridge = TCPBridge(
+                ip_layer.src, tcp_layer.sport, ip_layer.dst, tcp_layer.dport
+            )
+            tcp_bridge.run()
 
 
 if __name__ == "__main__":
-    # sniff(filter="tcp", prn=packet_handler)
-    # Create a new thread for running the sniffing function
-    sniff_thread = threading.Thread(
-        target=sniff,
-        kwargs={"filter": "tcp port 80", "prn": http_packet_callback, "store": False},
-    )
-
-    # Start the thread
-    sniff_thread.start()
-    tcp_bridge = TCPBridge("0.0.0.0", 8080, "192.168.44.130", 80)
-    tcp_bridge.run()
+    sniff(prn=http_packet_callback, filter="tcp", store=0)
