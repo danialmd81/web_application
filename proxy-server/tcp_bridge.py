@@ -58,8 +58,10 @@ class TCPBridge(object):
         try:
             while not self.stop:
                 sock.getpeername()
-                r, w, x = select.select([sock], [], [], 1000)
-                if sock in r:
+                readable, _, _ = select.select(
+                    [sock, sock2] if "sock2" in locals() else [sock], [], [], 1000
+                )
+                if sock in readable:
                     data = sock.recv(chunk_size)
                     if len(data) == 0:
                         break
@@ -68,11 +70,13 @@ class TCPBridge(object):
                     # if host == specific_host:
                     #     print(sock.getpeername(), ":", sock2.getpeername(), ":", host)
                     #     sock2.sendall(data)
-                    sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                    sock2.connect((host, 80))
-                    r.append([sock, sock2])
+                    if "sock2" not in locals():
+                        sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                        sock2.connect((host, 80))
 
-                if sock2 in r:
+                    sock2.sendall(data)
+
+                if "sock2" in locals() and sock2 in readable:
                     data = sock2.recv(chunk_size)
                     if len(data) == 0:
                         break
