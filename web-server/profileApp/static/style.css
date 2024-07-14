@@ -1,38 +1,38 @@
 /*Store this code in 'style.css' file inside the 'static' folder*/
 
-.logincontent{
+.logincontent {
 	margin: 0 auto;
 	height: 500px;
 	width: 400px;
-	background-color: #e6ffee; 
+	background-color: #e6ffee;
 	border-radius: 10px;
 }
 
-.registercontent{
+.registercontent {
 	margin: 0 auto;
 	height: 720px;
 	width: 400px;
-	background-color: #e6ffee; 
+	background-color: #e6ffee;
 	border-radius: 10px;
 }
 
-.logintop{
+.logintop {
 	height: 60px;
 	width: 400px;
-	background-color: #009933; 
+	background-color: #009933;
 	color: #ffffff;
 }
 
-.registertop{
+.registertop {
 	height: 60px;
 	width: 400px;
-	background-color: #009933; 
+	background-color: #009933;
 	color: #ffffff;
 }
 
-.textbox{
+.textbox {
 	padding: 10px 40px;
-	background-color: #009933; 
+	background-color: #009933;
 	border-radius: 10px;
 }
 
@@ -45,26 +45,26 @@
 
 .btn {
 	padding: 10px 40px;
-	background-color: #009933; 
+	background-color: #009933;
 	color: #FFFFFF;
 	font-style: oblique;
 	font-weight: bold;
 	border-radius: 10px;
 }
 
-.worddark{
+.worddark {
 	color: #009933;
 	font-style: oblique;
 	font-weight: bold;
 }
 
-.wordlight{
+.wordlight {
 	color: #FFFFFF;
 	font-style: oblique;
 	font-weight: bold;
 }
 
-*{
+* {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
@@ -73,12 +73,12 @@
 	font-family: 'Josefin Sans', sans-serif;
 }
 
-.one{
+.one {
 	display: flex;
 	position: relative;
 }
 
-.one .two{
+.one .two {
 	width: 225px;
 	height: 100%;
 	background: #009933;
@@ -86,7 +86,7 @@
 	position: fixed;
 }
 
-.one .two h1{
+.one .two h1 {
 	color: #fff;
 	text-transform: uppercase;
 	text-align: center;
@@ -94,50 +94,50 @@
 	font-style: oblique;
 	font-weight: bold;
 }
-		
-.one .two h2{
+
+.one .two h2 {
 	color: #fff;
 	text-align: center;
 }
-		
-.one .two .active{
+
+.one .two .active {
 	background: #0a8032;
 }
 
-.one .two ul li{
+.one .two ul li {
 	text-align: center;
 	padding: 15px;
 	border-bottom: 0.1px solid white;
 	border-top: 0.1px solid white;
-} 
+}
 
-.one .two ul li a{
+.one .two ul li a {
 	color: #ffffff;
 	display: block;
 }
 
-.one .two ul li a .side{
+.one .two ul li a .side {
 	width: 25px;
-	align:center;
+	box-align: center;
 }
 
-.one .content{
+.one .content {
 	width: 100%;
 	margin-left: 200px;
 }
 
-.one .content .topbar{
+.one .content .topbar {
 	text-align: center;
 	padding: 20px;
 	background: #00b33c;
 	color: white;
 }
-		
-.one .content .contentbar{
+
+.one .content .contentbar {
 	margin: auto;
 }
 
-.one .content .contentbar h1{
+.one .content .contentbar h1 {
 	color: #11a844;
 	text-align: center;
 	font-style: oblique;
