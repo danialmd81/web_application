@@ -94,17 +94,8 @@ def modify_and_forward(packet):
         sendp(
             packet, iface="YOUR_NETWORK_INTERFACE"
         )  # Specify the correct network interface
-    # if packet.haslayer(HTTP):  # Use HTTP instead of http
-    # http_header = packet[HTTP]
-    # print(f"HTTP Header: {http_header}")
-    # packet[IP].src = PROXY_IP
-    # packet[TCP].sport = PROXY_PORT
-
-    # del packet[IP].chksum
-    # del packet[TCP].chksum
-
-    # Forward the modified packet
-    # sendp(packet)
+    http_header = packet[HTTP]
+    print(f"HTTP Header: {http_header}")
 
 
 if __name__ == "__main__":
