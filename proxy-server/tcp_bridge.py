@@ -2,8 +2,8 @@ import select
 import socket
 from struct import pack
 import threading
-from scapy.all import *
-from scapy.all import sniff, IP, TCP
+from scapy.all import sniff, IP, TCP, sendp
+from scapy.layers.http import HTTP  # Import the HTTP layer
 
 
 def threaded(fn):
@@ -82,23 +82,33 @@ PROXY_PORT = 8080  # Example proxy port
 
 
 def modify_and_forward(packet):
-    if packet.haslayer(IP) and packet.haslayer(TCP):
-        if packet[IP].dst == "192.168.44.130" and packet[TCP].dport == 80:
-            # Change the destination IP to the proxy IP
-            packet[IP].dst = PROXY_IP
-            # Change the destination port to the proxy port
-            packet[TCP].dport = PROXY_PORT
+    if packet.haslayer(IP) and packet.haslayer(
+        TCP
+    ):  # Ensure packet has IP and TCP layers
+        packet[IP].src = PROXY_IP
+        packet[TCP].sport = PROXY_PORT
 
-            # Delete checksums so Scapy recalculates them
-            del packet[IP].chksum
-            del packet[TCP].chksum
+        del packet[IP].chksum  # Delete checksums so they can be recalculated
+        del packet[TCP].chksum
 
-            # Forward the modified packet
-            sendp(packet)
+        sendp(
+            packet, iface="YOUR_NETWORK_INTERFACE"
+        )  # Specify the correct network interface
+    # if packet.haslayer(HTTP):  # Use HTTP instead of http
+    # http_header = packet[HTTP]
+    # print(f"HTTP Header: {http_header}")
+    # packet[IP].src = PROXY_IP
+    # packet[TCP].sport = PROXY_PORT
+
+    # del packet[IP].chksum
+    # del packet[TCP].chksum
+
+    # Forward the modified packet
+    # sendp(packet)
 
 
 if __name__ == "__main__":
     # TODO:change destonation ip
-    tcp_bridge = TCPBridge("0.0.0.0", 8082, "192.168.44.130", 80)
+    tcp_bridge = TCPBridge("192.168.44.131", 8080, "192.168.44.130", 80)
     tcp_bridge.run()
     sniff(filter="ip and tcp", prn=modify_and_forward)
