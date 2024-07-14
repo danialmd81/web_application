@@ -3,7 +3,7 @@ import socket
 from struct import pack
 import threading
 from scapy.all import sniff, IP, TCP, sendp, Raw, send
-from scapy.layers.http import HTTP  # Import the HTTP layer
+from scapy.layers.http import HTTP, HTTPRequest  # Import the HTTP layer
 
 
 def threaded(fn):
@@ -77,6 +77,26 @@ class TCPBridge(object):
                 print("Exception:", exp)
 
 
+def packet_handler(packet):
+    if packet.haslayer(TCP):
+        tcp_layer = packet.getlayer(TCP)
+        ip_layer = packet.getlayer(IP)
+        print(
+            f"Source IP: {ip_layer.src}:{tcp_layer.sport} --> Destination IP: {ip_layer.dst}:{tcp_layer.dport}"
+        )
+
+
+def http_packet_callback(packet):
+    if packet.haslayer(HTTPRequest):
+        http_layer = packet.getlayer(HTTPRequest)
+        print(f"HTTP Method: {http_layer.Method.decode("utf-8")}")
+        print(f"HTTP Host: {http_layer.Host.decode('utf-8')}")
+        print(f"HTTP Path: {http_layer.Path.decode('utf-8')}")
+        print(f"HTTP User-Agent: {http_layer.fields['User-Agent'].decode('utf-8')}")
+
+
 if __name__ == "__main__":
     tcp_bridge = TCPBridge("0.0.0.0", 8080, "192.168.44.130", 80)
+    sniff(filter="tcp", prn=tcp_bridge.packet_handler)
+    sniff(filter="tcp port 80",prn=http_packet_callback,store=False)
     tcp_bridge.run()
