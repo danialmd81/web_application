@@ -2,7 +2,7 @@ import select
 import socket
 from struct import pack
 import threading
-from scapy.all import sniff, IP, TCP, sendp
+from scapy.all import sniff, IP, TCP, sendp, Raw, send
 from scapy.layers.http import HTTP  # Import the HTTP layer
 
 
@@ -77,29 +77,6 @@ class TCPBridge(object):
                 print("Exception:", exp)
 
 
-PROXY_IP = "192.168.44.131"
-PROXY_PORT = 8080  # Example proxy port
-
-
-def modify_and_forward(packet):
-    if packet.haslayer(IP) and packet.haslayer(
-        TCP
-    ):  # Ensure packet has IP and TCP layers
-        packet[IP].src = PROXY_IP
-        packet[TCP].sport = PROXY_PORT
-
-        del packet[IP].chksum  # Delete checksums so they can be recalculated
-        del packet[TCP].chksum
-
-        sendp(
-            packet, iface="YOUR_NETWORK_INTERFACE"
-        )  # Specify the correct network interface
-    http_header = packet[HTTP]
-    print(f"HTTP Header: {http_header}")
-
-
 if __name__ == "__main__":
-    # TODO:change destonation ip
-    tcp_bridge = TCPBridge("192.168.44.131", 8080, "192.168.44.130", 80)
+    tcp_bridge = TCPBridge("0.0.0.0", 8080, "192.168.44.130", 80)
     tcp_bridge.run()
-    sniff(filter="ip and tcp", prn=modify_and_forward)
