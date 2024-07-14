@@ -1,7 +1,9 @@
 import select
 import socket
+from struct import pack
 import threading
-from scapy.all import sniff, IP, TCP, Raw
+from scapy.all import *
+from scapy.all import sniff, IP, TCP
 
 
 def threaded(fn):
@@ -31,7 +33,7 @@ class TCPBridge(object):
     def tunnel(self, sock: socket.socket, sock2: socket.socket, chunk_size=1024):
         try:
             while not self.stop:
-                """this line is for raising exception when connection is broken"""
+                # this line is for raising exception when connection is broken
                 sock.getpeername() and sock2.getpeername()
                 r, w, x = select.select([sock, sock2], [], [], 1000)
                 if sock in r:
@@ -64,8 +66,7 @@ class TCPBridge(object):
                 (sock, addr) = self.server.accept()
                 if sock is None:
                     continue
-                client_socket = socket.socket(
-                    socket.AF_INET, socket.SOCK_STREAM)
+                client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 client_socket.connect((self.dst_host, self.dst_port))
                 self.tunnel(sock, client_socket)
             except KeyboardInterrupt:
@@ -76,22 +77,28 @@ class TCPBridge(object):
                 print("Exception:", exp)
 
 
-def packet_callback(packet):
-    if packet.haslayer(TCP) and packet.haslayer(Raw):
-        # Here you would analyze the packet, potentially modify it,
-        # and then need to forward it appropriately.
-        # This is a non-trivial task and requires a deep understanding
-        # of TCP/IP protocols and state management.
-        print(packet.summary())
+PROXY_IP = "192.168.44.131"
+PROXY_PORT = 8080  # Example proxy port
 
 
-def start_sniffing():
-    sniff(filter="tcp port 80", prn=packet_callback, store=0)
+def modify_and_forward(packet):
+    if packet.haslayer(IP) and packet.haslayer(TCP):
+        if packet[IP].dst == "192.168.44.130" and packet[TCP].dport == 80:
+            # Change the destination IP to the proxy IP
+            packet[IP].dst = PROXY_IP
+            # Change the destination port to the proxy port
+            packet[TCP].dport = PROXY_PORT
+
+            # Delete checksums so Scapy recalculates them
+            del packet[IP].chksum
+            del packet[TCP].chksum
+
+            # Forward the modified packet
+            sendp(packet)
 
 
 if __name__ == "__main__":
-    sniff_thread = threading.Thread(target=start_sniffing)
-    sniff_thread.start()
     # TODO:change destonation ip
-    tcp_bridge = TCPBridge("0.0.0.0", 8082, "192.168.1.1", 80)
+    tcp_bridge = TCPBridge("0.0.0.0", 8082, "192.168.44.130", 80)
     tcp_bridge.run()
+    sniff(filter="ip and tcp", prn=modify_and_forward)
