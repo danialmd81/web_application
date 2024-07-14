@@ -16,6 +16,7 @@ def threaded(fn):
 
 
 class TCPBridge(object):
+
     def __init__(self, host, port, dst_host, dst_port):
         self.host = host
         self.port = port
@@ -49,7 +50,7 @@ class TCPBridge(object):
         try:
             while not self.stop:
                 sock.getpeername() and sock2.getpeername()
-                r = select.select([sock, sock2], 1000)
+                r, w, x = select.select([sock, sock2], [], [], 1000)
                 if sock in r:
                     data = sock.recv(chunk_size)
                     if len(data) == 0:
@@ -77,11 +78,12 @@ class TCPBridge(object):
                 pass
 
     def run(self) -> None:
+
         self.server.listen()
+
         while not self.stop:
             try:
                 (sock, addr) = self.server.accept()
-                print(f"Connection from {addr}")
                 if sock is None:
                     continue
                 client_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -93,19 +95,6 @@ class TCPBridge(object):
                 pass
             except Exception as exp:
                 print("Exception:", exp)
-
-
-def http_packet_callback(packet):
-    if packet.haslayer(HTTPRequest):
-        http_layer = packet.getlayer(HTTPRequest)
-        print(f"HTTP Method: {http_layer.Method.decode('utf-8')}")
-        print(f"HTTP Host: {http_layer.Host.decode('utf-8')}")
-        if packet.haslayer(TCP):
-            tcp_layer = packet.getlayer(TCP)
-            ip_layer = packet.getlayer(IP)
-            print(
-                f"Source IP: {ip_layer.src}:{tcp_layer.sport} --> Destination IP: {ip_layer.dst}:{tcp_layer.dport}"
-            )
 
 
 if __name__ == "__main__":
