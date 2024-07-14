@@ -74,9 +74,7 @@ class TCPBridge(object):
                 pass
 
     def run(self) -> None:
-
         self.server.listen()
-
         while not self.stop:
             try:
                 (sock, addr) = self.server.accept()
