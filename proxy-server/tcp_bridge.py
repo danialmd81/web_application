@@ -86,7 +86,7 @@ def http_packet_callback(packet):
         print(f"HTTP Path: {http_layer.Path.decode('utf-8')}")
         print(f"HTTP User-Agent: {http_layer.User_Agent.decode('utf-8')}")
         print(f"HTTP Accept: {http_layer.Accept.decode('utf-8')}")
-        if packet.haslayer(TCP) and packet.haslayer(IP):
+        if packet.haslayer(TCP):
             tcp_layer = packet.getlayer(TCP)
             ip_layer = packet.getlayer(IP)
             print(
@@ -95,4 +95,13 @@ def http_packet_callback(packet):
 
 
 if __name__ == "__main__":
-    sniff(prn=http_packet_callback, filter="tcp", store=0)
+    # Create a new thread for running the sniffing function
+    sniff_thread = threading.Thread(
+        target=sniff,
+        kwargs={"filter": "tcp port 80", "prn": http_packet_callback, "store": False},
+    )
+
+    # Start the thread
+    sniff_thread.start()
+    tcp_bridge = TCPBridge("0.0.0.0", 8080, "192.168.44.130", 80)
+    tcp_bridge.run()
