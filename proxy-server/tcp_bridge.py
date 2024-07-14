@@ -92,10 +92,6 @@ def http_packet_callback(packet):
             print(
                 f"Source IP: {ip_layer.src}:{tcp_layer.sport} --> Destination IP: {ip_layer.dst}:{tcp_layer.dport}"
             )
-            tcp_bridge = TCPBridge(
-                ip_layer.src, tcp_layer.sport, ip_layer.dst, tcp_layer.dport
-            )
-            tcp_bridge.run()
 
 
 if __name__ == "__main__":
