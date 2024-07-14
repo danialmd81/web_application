@@ -78,15 +78,6 @@ class TCPBridge(object):
                 print("Exception:", exp)
 
 
-def packet_handler(packet):
-    if packet.haslayer(TCP):
-        tcp_layer = packet.getlayer(TCP)
-        ip_layer = packet.getlayer(IP)
-        print(
-            f"Source IP: {ip_layer.src}:{tcp_layer.sport} --> Destination IP: {ip_layer.dst}:{tcp_layer.dport}"
-        )
-
-
 def http_packet_callback(packet):
     if packet.haslayer(HTTPRequest):
         http_layer = packet.getlayer(HTTPRequest)
@@ -95,6 +86,12 @@ def http_packet_callback(packet):
         print(f"HTTP Path: {http_layer.Path.decode('utf-8')}")
         print(f"HTTP User-Agent: {http_layer.User_Agent.decode('utf-8')}")
         print(f"HTTP Accept: {http_layer.Accept.decode('utf-8')}")
+        if packet.haslayer(TCP):
+            tcp_layer = packet.getlayer(TCP)
+            ip_layer = packet.getlayer(IP)
+            print(
+                f"Source IP: {ip_layer.src}:{tcp_layer.sport} --> Destination IP: {ip_layer.dst}:{tcp_layer.dport}"
+            )
 
 
 if __name__ == "__main__":
