@@ -43,7 +43,7 @@ class TCPBridge(object):
             while not self.stop:
                 sock.getpeername()
                 readable, _, _ = select.select(
-                    [sock, sock2] if "sock2" in locals() else [sock], [], [], 1000
+                    [sock] + ([sock2] if "sock2" in locals() else []), [], [], 1000
                 )
                 if sock in readable:
                     data = sock.recv(chunk_size)
@@ -51,17 +51,15 @@ class TCPBridge(object):
                         break
                     host = self.parse_http_request(data)
                     print(host)
-                    if "sock2" not in locals():
-                        sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-                        sock2.connect((host, 80))
-
+                    # Create a new connection for each new host
+                    sock2 = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+                    sock2.connect((host, 80))
                     sock2.sendall(data)
 
                 if "sock2" in locals() and sock2 in readable:
                     data = sock2.recv(chunk_size)
                     if len(data) == 0:
                         break
-                    # Assuming you only want to filter requests, not responses
                     sock.sendall(data)
         except:
             pass
