@@ -45,7 +45,7 @@ class TCPBridge(object):
         sock: socket.socket,
         sock2: socket.socket,
         chunk_size=1024,
-        specific_host="192.168.44.130",
+        specific_host="192.168.1,1",
     ):
         try:
             while not self.stop:
